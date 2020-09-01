@@ -1,4 +1,4 @@
-import rateHtml from './index.html'
+// import rateHtml from './index.html'
 import './index.scss'
 import { parseDom } from 'utils'
 
@@ -9,16 +9,30 @@ export default class RateComponent {
   /**
    * @constructor 倍速播放组件构造函数
    */
-  constructor () {
+  constructor(rateList) {
+    this.rateList = rateList
+    const rate = localStorage.getItem('videoRateSpeed') || ''
+    const defaultItem = rateList.find(i => i.rate === 1)
+    const rateItem = rate ? rateList.find(i => i.rate.toString() === rate) : defaultItem
+    const liEl = rateList.map(i =>
+      (
+        `<li data-rate="${i.rate}" class="${i.rate === rateItem.rate ? 'current' : ''}">${i.text}</li>`
+      ))
+    const rateHtml = `<div class="rate-components">
+    <div class="current-rate">${rateItem.text}</div>
+      <ul class="rate-list">
+      ${liEl.join('')}
+      </ul>               
+    </div>`
     this.html = parseDom(rateHtml)
   }
 
-  createEl (el) {
+  createEl(el) {
     let eleControlbar = el.querySelector('.prism-controlbar')
     eleControlbar.appendChild(this.html)
   }
 
-  ready (player, e) {
+  ready(player, e) {
     let currentRateEle = this.html.querySelector('.current-rate')
     let rateListEle = this.html.querySelector('.rate-list')
     let timeId = null
@@ -26,13 +40,13 @@ export default class RateComponent {
     // 隐藏设置里面的倍速播放
     let settingRate = document.querySelector('.prism-setting-item.prism-setting-speed')
     if (settingRate) {
-     settingRate.classList.add('player-hidden')
+      settingRate.classList.add('player-hidden')
     }
 
     currentRateEle.onclick = () => {
       rateListEle.style.display = 'block'
     }
-    currentRateEle.onmouseleave = () =>{
+    currentRateEle.onmouseleave = () => {
       timeId = setTimeout(() => {
         rateListEle.style.display = 'none'
       }, 100);
@@ -45,9 +59,10 @@ export default class RateComponent {
       rateListEle.style.display = 'none'
     }
 
-    rateListEle.onclick = ({target}) => {
+    rateListEle.onclick = ({ target }) => {
       let rate = target.dataset.rate
       if (rate) {
+        localStorage.setItem('videoRateSpeed', rate)
         player.setSpeed(rate)
         if (target.className !== 'current') {
           let currentEle = rateListEle.querySelector('.current')
@@ -57,7 +72,7 @@ export default class RateComponent {
           target.className = 'current'
         }
         rateListEle.style.display = 'none'
-        currentRateEle.innerText = rate + 'x'
+        currentRateEle.innerText = this.rateList.find(i => i.rate.toString() === rate).text
 
       }
     }
