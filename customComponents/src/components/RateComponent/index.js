@@ -14,6 +14,7 @@ export default class RateComponent {
     const rate = localStorage.getItem('videoRateSpeed') || ''
     const defaultItem = rateList.find(i => i.rate === 1)
     const rateItem = rate ? rateList.find(i => i.rate.toString() === rate) : defaultItem
+    this.defaultItem = rateItem
     const liEl = rateList.map(i =>
       (
         `<li data-rate="${i.rate}" class="${i.rate === rateItem.rate ? 'current' : ''}">${i.text}</li>`
@@ -36,6 +37,7 @@ export default class RateComponent {
     let currentRateEle = this.html.querySelector('.current-rate')
     let rateListEle = this.html.querySelector('.rate-list')
     let timeId = null
+    player.setSpeed(this.defaultItem.rate)
 
     // 隐藏设置里面的倍速播放
     let settingRate = document.querySelector('.prism-setting-item.prism-setting-speed')
