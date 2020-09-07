@@ -12,10 +12,10 @@ export default class QualityComponent {
     this.modalHtml = parseDom(qualityModal)
     this.hasCreated = false
     this.definition = ''
-    this.getQuality = getQuality 
+    this.getQuality = getQuality
   }
 
-  createEl (el, player) {
+  createEl(el, player) {
     const lang = player._options && player._options.language
     this.isEn = lang && lang === 'en-us'
     this.html.querySelector('.current-quality').innerText = this.isEn ? 'Resolution' : '清晰度'
@@ -65,7 +65,7 @@ export default class QualityComponent {
     currentQualityEle.onclick = () => {
       qualityListEle.style.display = 'block'
     }
-    currentQualityEle.onmouseleave = () =>{
+    currentQualityEle.onmouseleave = () => {
       timeId = setTimeout(() => {
         qualityListEle.style.display = 'none'
       }, 100);
@@ -78,22 +78,28 @@ export default class QualityComponent {
       qualityListEle.style.display = 'none'
     }
 
-    qualityListEle.onclick = ({target}) => {
+    qualityListEle.onclick = ({ target }) => {
       let definition = target.dataset.def
       let desc = target.innerText
       if (definition) {
         if (target.className !== 'current') {
           let url = this._urls.find(url => url.definition === definition)
-          player.loadByUrl(url.Url, player.getCurrentTime(), true, true)          
+          player.loadByUrl(url.Url, player.getCurrentTime(), true, true)
 
           this.setCurrentQuality(url.desc, url.definition)
 
           this.modalHtml.style.display = 'block'
           this.modalHtml.querySelector('span.current-quality-tag').innerText = url.desc
-        } 
+
+          // 设置语速
+          const rate = localStorage.getItem('videoRateSpeed') || ''
+          if (rate) {
+            player.setSpeed(rate)
+          }
+        }
       }
       //点击切换清晰度时，调用这个方法
-      this.getQuality(definition,desc)
+      // this.getQuality(definition,desc)
     }
   }
 
@@ -102,7 +108,7 @@ export default class QualityComponent {
     // 隐藏设置里面的倍速播放
     let settingEle = document.querySelector('.prism-setting-item.prism-setting-quality')
     if (settingEle) {
-     settingEle.classList.add('player-hidden')
+      settingEle.classList.add('player-hidden')
     }
   }
 }
