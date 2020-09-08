@@ -90,12 +90,6 @@ export default class QualityComponent {
 
           this.modalHtml.style.display = 'block'
           this.modalHtml.querySelector('span.current-quality-tag').innerText = url.desc
-
-          // 设置语速
-          const rate = localStorage.getItem('videoRateSpeed') || ''
-          if (rate) {
-            player.setSpeed(rate)
-          }
         }
       }
       //点击切换清晰度时，调用这个方法

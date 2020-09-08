@@ -64,6 +64,7 @@ export default class RateComponent {
     rateListEle.onclick = ({ target }) => {
       let rate = target.dataset.rate
       if (rate) {
+        const defaultItem = this.rateList.find(i => i.rate.toString() === rate) || this.defaultItem
         localStorage.setItem('videoRateSpeed', rate)
         player.setSpeed(rate)
         if (target.className !== 'current') {
@@ -74,8 +75,8 @@ export default class RateComponent {
           target.className = 'current'
         }
         rateListEle.style.display = 'none'
-        currentRateEle.innerText = this.rateList.find(i => i.rate.toString() === rate).text
-
+        currentRateEle.innerText = defaultItem.text;
+        this.defaultItem = defaultItem;
       }
     }
   }
