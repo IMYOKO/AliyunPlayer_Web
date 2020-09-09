@@ -90,6 +90,7 @@ export default class QualityComponent {
 
           this.modalHtml.style.display = 'block'
           this.modalHtml.querySelector('span.current-quality-tag').innerText = url.desc
+          localStorage.setItem('aliplayer_definition', definition);
         }
       }
       //点击切换清晰度时，调用这个方法
